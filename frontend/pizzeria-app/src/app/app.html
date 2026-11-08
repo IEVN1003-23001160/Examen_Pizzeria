@@ -1,0 +1,288 @@
+
+<div class="contenedor">
+
+  <h1>Pizzería</h1>
+  <h2>Registro de pedidos</h2>
+
+  <section class="datos-cliente">
+
+    <h3>Datos del cliente</h3>
+
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="nombre" placeholder="Nombre completo">
+
+    <label>Dirección:</label>
+    <input type="text" [(ngModel)]="direccion" placeholder="Dirección">
+
+    <label>Teléfono:</label>
+    <input type="text" [(ngModel)]="telefono" placeholder="Teléfono">
+
+  </section>
+
+  <section class="datos-pizza">
+
+    <h3>Datos de la pizza</h3>
+
+    <label>Fecha del pedido:</label>
+    <input type="date" [(ngModel)]="fecha">
+
+    <div class="opciones">
+
+      <label>Tamaño de pizza:</label>
+
+      <div>
+        <input type="radio" name="tamano" value="Chica" [(ngModel)]="tamano">
+        Chica $40
+      </div>
+
+      <div>
+        <input type="radio" name="tamano" value="Mediana" [(ngModel)]="tamano">
+        Mediana $80
+      </div>
+
+      <div>
+        <input type="radio" name="tamano" value="Grande" [(ngModel)]="tamano">
+        Grande $120
+      </div>
+
+    </div>
+
+    <div class="opciones">
+
+      <label>Ingredientes:</label>
+
+      <div>
+        <input type="checkbox" [(ngModel)]="jamon">
+        Jamón $10
+      </div>
+
+      <div>
+        <input type="checkbox" [(ngModel)]="pina">
+        Piña $10
+      </div>
+
+      <div>
+        <input type="checkbox" [(ngModel)]="champinones">
+        Champiñones $10
+      </div>
+
+    </div>
+
+    <label>Número de pizzas:</label>
+    <input type="number" min="1" [(ngModel)]="cantidad" placeholder="Cantidad de pizzas">
+
+    <button (click)="agregarPedido()">Agregar</button>
+
+  </section>
+
+  <h3>Detalle del pedido</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tamaño</th>
+        <th>Ingredientes</th>
+        <th>Num. Pizzas</th>
+        <th>SubTotal</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let pedido of pedidos; let i = index">
+        <td>{{ pedido.tamano }}</td>
+        <td>{{ pedido.ingredientes }}</td>
+        <td>{{ pedido.cantidad }}</td>
+        <td>${{ pedido.subtotal }}</td>
+        <td>
+          <button (click)="quitarPedido(i)">Quitar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Total: ${{ total }}</h3>
+
+  <button (click)="terminarPedido()">Terminar pedido</button>
+
+
+  <section class="resumen" *ngIf="mostrarResumen">
+
+    <h2>¡Pedido registrado correctamente!</h2>
+
+    <h3>Datos del cliente</h3>
+
+    <p><strong>Nombre:</strong> {{ nombre }}</p>
+    <p><strong>Dirección:</strong> {{ direccion }}</p>
+    <p><strong>Teléfono:</strong> {{ telefono }}</p>
+    <p><strong>Fecha:</strong> {{ fecha }}</p>
+
+    <h3>Resumen de compra</h3>
+
+    <p><strong>Total de pizzas:</strong> {{ totalPizzas }}</p>
+    <p><strong>Total a pagar:</strong> ${{ total }}</p>
+
+    <button (click)="imprimirComprobante()">Imprimir comprobante</button>
+
+    <button (click)="nuevoPedido()">Nuevo pedido</button>
+
+  </section>
+
+
+  <hr>
+
+  <h2>Consultas de ventas</h2>
+
+  <section class="datos-pizza">
+
+    <h3>Consulta de ventas por día</h3>
+
+    <label>Selecciona el día:</label>
+
+    <select [(ngModel)]="diaConsulta">
+
+      <option value="lunes">Lunes</option>
+      <option value="martes">Martes</option>
+      <option value="miercoles">Miércoles</option>
+      <option value="jueves">Jueves</option>
+      <option value="viernes">Viernes</option>
+      <option value="sabado">Sábado</option>
+      <option value="domingo">Domingo</option>
+
+    </select>
+
+    <button (click)="consultarDia()">Consultar ventas del día</button>
+
+  </section>
+
+  <section class="datos-pizza">
+
+    <h3>Consulta de ventas por mes</h3>
+
+    <label>Selecciona el mes:</label>
+
+    <select [(ngModel)]="mesConsulta">
+
+      <option value="enero">Enero</option>
+      <option value="febrero">Febrero</option>
+      <option value="marzo">Marzo</option>
+      <option value="abril">Abril</option>
+      <option value="mayo">Mayo</option>
+      <option value="junio">Junio</option>
+      <option value="julio">Julio</option>
+      <option value="agosto">Agosto</option>
+      <option value="septiembre">Septiembre</option>
+      <option value="octubre">Octubre</option>
+      <option value="noviembre">Noviembre</option>
+      <option value="diciembre">Diciembre</option>
+
+    </select>
+
+    <button (click)="consultarMes()">Consultar ventas del mes</button>
+
+  </section>
+
+  <section class="datos-pizza">
+
+    <h3>Visualización del detalle de una venta</h3>
+
+    <label>Número de pedido:</label>
+
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="idPedidoConsulta"
+      placeholder="Ingresa el número del pedido">
+
+    <button (click)="consultarDetalle()">Consultar detalle</button>
+
+  </section>
+
+
+  <section *ngIf="mostrarVentas">
+
+    <h2>{{ tituloConsulta }}</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Fecha</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let venta of ventasConsulta">
+
+          <td>{{ venta.id }}</td>
+          <td>{{ venta.nombre }}</td>
+          <td>{{ venta.direccion }}</td>
+          <td>{{ venta.telefono }}</td>
+          <td>{{ venta.fecha }}</td>
+          <td>${{ venta.total }}</td>
+
+        </tr>
+
+        <tr *ngIf="ventasConsulta.length == 0">
+          <td colspan="6">No se encontraron ventas en esta consulta.</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <h3>Total acumulado: ${{ totalConsulta }}</h3>
+
+  </section>
+
+
+  <section class="resumen" *ngIf="mostrarDetalle && detalleVenta">
+
+    <h2>Detalle del pedido #{{ detalleVenta.id }}</h2>
+
+    <h3>Datos del cliente</h3>
+
+    <p><strong>Nombre:</strong> {{ detalleVenta.nombre }}</p>
+    <p><strong>Dirección:</strong> {{ detalleVenta.direccion }}</p>
+    <p><strong>Teléfono:</strong> {{ detalleVenta.telefono }}</p>
+    <p><strong>Fecha:</strong> {{ detalleVenta.fecha }}</p>
+
+    <h3>Desglose de pizzas</h3>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Tamaño</th>
+          <th>Ingredientes</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let pizza of detalleVenta.pizzas">
+
+          <td>{{ pizza.tamano }}</td>
+          <td>{{ pizza.ingredientes }}</td>
+          <td>{{ pizza.cantidad }}</td>
+          <td>${{ pizza.subtotal }}</td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <h3>Total del pedido: ${{ detalleVenta.total }}</h3>
+
+  </section>
+
+</div>
